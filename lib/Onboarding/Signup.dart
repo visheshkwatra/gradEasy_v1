@@ -7,11 +7,12 @@ class SignupScreen extends StatelessWidget {
   final TextEditingController firstnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
   final TextEditingController lastnameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController roleController = TextEditingController();
   final TextEditingController batchController = TextEditingController();
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String password = '';
 
@@ -80,72 +81,123 @@ class SignupScreen extends StatelessWidget {
           Center(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Add an image at the top
-                  Image.asset(
-                    'Images/Campus_Connect-removebg.png', // Replace with your image path
-                    height: 100,
-                  ),
-                  SizedBox(height: 16),
-                  TextField(
-                    controller: firstnameController,
-                    decoration: InputDecoration(labelText: 'First Name'),
-                  ),
-                  TextField(
-                    controller: lastnameController,
-                    decoration: InputDecoration(labelText: 'Last Name'),
-                  ),
-                  TextField(
-                    controller: emailController,
-                    decoration: InputDecoration(labelText: 'Email'),
-                  ),
-                  TextField(
-                    controller: phoneController,
-                    decoration: InputDecoration(labelText: 'Phone Number'),
-                  ),
-                  TextField(
-                    controller: passwordController,
-                    decoration: InputDecoration(labelText: 'Password'),
-                    obscureText: true,
-                  ),
-                  TextField(
-                    controller: roleController,
-                    decoration: InputDecoration(labelText: 'Role'),
-                  ),
-                  TextField(
-                    controller: batchController,
-                    decoration: InputDecoration(labelText: 'Batch'),
-                  ),
-                  SizedBox(height: 16),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Color(0xFF9C71E1), // Purple color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Add an image at the top
+                    Image.asset(
+                      'Images/Campus_Connect-removebg.png', // Replace with your image path
+                      height: 100,
                     ),
-                    onPressed: () {
-                      final firstname = firstnameController.text;
-                      final lastname = lastnameController.text;
-                      final email = emailController.text;
-                      final phone = phoneController.text;
-                      final role = roleController.text;
-                      final batch = int.tryParse(batchController.text) ?? 0;
+                    SizedBox(height: 16),
+                    TextFormField(
+                      controller: firstnameController,
+                      decoration: InputDecoration(labelText: 'First Name'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your first name';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: lastnameController,
+                      decoration: InputDecoration(labelText: 'Last Name'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your last name';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: emailController,
+                      decoration: InputDecoration(labelText: 'Email'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        } else if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$').hasMatch(value)) {
+                          return 'Please enter a valid email address';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: phoneController,
+                      decoration: InputDecoration(labelText: 'Phone Number'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your phone number';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: passwordController,
+                      decoration: InputDecoration(labelText: 'Password'),
+                      obscureText: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a password';
+                        } else if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: roleController,
+                      decoration: InputDecoration(labelText: 'Role'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your role';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: batchController,
+                      decoration: InputDecoration(labelText: 'Batch'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your batch';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFF9C71E1), // Purple color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          final firstname = firstnameController.text;
+                          final lastname = lastnameController.text;
+                          final email = emailController.text;
+                          final phone = phoneController.text;
+                          final role = roleController.text;
+                          final batch = int.tryParse(batchController.text) ?? 0;
 
-                      registerUser(firstname, lastname, email, phone, password, role, batch, context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: Text(
-                        'Register',
-                        style: TextStyle(fontSize: 18.0),
+                          registerUser(firstname, lastname, email, phone, password, role, batch, context);
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: Text(
+                          'Register',
+                          style: TextStyle(fontSize: 18.0),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -163,5 +215,4 @@ class SignupScreen extends StatelessWidget {
       ),
     );
   }
-
 }

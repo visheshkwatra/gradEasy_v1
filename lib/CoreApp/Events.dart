@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'BottomNav.dart';
 
-
 class EventsPage extends StatefulWidget {
   final int userId;
 
@@ -15,7 +14,7 @@ class EventsPage extends StatefulWidget {
 }
 
 class _EventsPageState extends State<EventsPage> {
-  int _currentIndex = 3; // Index of the currently selected tab
+  int _currentIndex = 1; // Index of the currently selected tab
   List<Event> events = [];
 
   // Function to handle tab selection
@@ -74,7 +73,7 @@ class _EventsPageState extends State<EventsPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
                 SizedBox(height: 50),
@@ -94,16 +93,27 @@ class _EventsPageState extends State<EventsPage> {
                     itemBuilder: (context, index) {
                       Event event = events[index];
                       return Card(
-                        elevation: 2.0,
+                        elevation: 5.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
                         margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                         child: ExpansionTile(
-                          leading: Image.network(event.eventImageUrl),
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              event.eventImageUrl,
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                           title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 event.title,
-                                style: TextStyle(color: Colors.black, fontSize: 18),
+                                style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                               Text(
                                 'Event Date: ${event.eventDate}',
@@ -144,8 +154,8 @@ class _EventsPageState extends State<EventsPage> {
                                         ),
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                            backgroundColor: Color(0xFF9C71E1), // Purple color
-                                            textStyle: TextStyle(fontSize: 18),
+                                            primary: Color(0xFF9C71E1), // Purple color
+                                            textStyle: TextStyle(fontSize: 16),
                                             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                           ),
                                           onPressed: () {

@@ -92,39 +92,77 @@ class _CafeteriasPageState extends State<CafeteriasPage> {
                     itemCount: cafeterias.length,
                     itemBuilder: (context, index) {
                       Cafeteria cafeteria = cafeterias[index];
-                      return ListTile(
-                        leading: Image.network(cafeteria.thumbnailUrl),
-                        title: Text(
-                          cafeteria.name,
-                          style: TextStyle(color: Colors.black, fontSize: 18),
+                      return Card(
+                        elevation: 5.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
                         ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              cafeteria.foodType,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            Text(
-                              'Rating: ${cafeteria.rating}',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ],
-                        ),
-                        trailing: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Color(0xFF9C71E1), // Purple color
-                            textStyle: TextStyle(fontSize: 18),
-                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          ),
-                          onPressed: () {
-                            String visitUsUrl = 'https://campusconnect.site/myAccount?id=$_userId&panel=0&restaurant_slug=${cafeteria.slug}';
+                        margin: EdgeInsets.all(10.0),
+                        child: InkWell(
+                          onTap: () {
+                            // Handle card tap
+                            String visitUsUrl =
+                                'https://campusconnect.site/myAccount?id=$_userId&panel=0&restaurant_slug=${cafeteria.slug}';
                             print('WebView URL: $visitUsUrl');
                             _openWebView(visitUsUrl);
                           },
-                          child: Text('Order'),
+                          child: Container(
+                            padding: EdgeInsets.all(16.0),
+                            child: Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Image.network(
+                                    cafeteria.thumbnailUrl,
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                SizedBox(width: 16.0),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        cafeteria.name,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8.0),
+                                      Text(
+                                        cafeteria.foodType,
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      Text(
+                                        'Rating: ${cafeteria.rating}',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color(0xFF9C71E1), // Purple color
+                                    textStyle: TextStyle(fontSize: 16),
+                                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  ),
+                                  onPressed: () {
+                                    // Handle order button tap
+                                    String visitUsUrl =
+                                        'https://campusconnect.site/myAccount?id=$_userId&panel=0&restaurant_slug=${cafeteria.slug}';
+                                    print('WebView URL: $visitUsUrl');
+                                    _openWebView(visitUsUrl);
+                                  },
+                                  child: Text('Order'),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        contentPadding: EdgeInsets.symmetric(vertical: 8),
                       );
                     },
                   ),
@@ -172,6 +210,7 @@ class Cafeteria {
     );
   }
 }
+
 class WebViewPage extends StatelessWidget {
   final String url;
 

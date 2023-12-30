@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => CafeteriasPage(userId: userId!),
+                                builder: (context) => HomeScreen(userId: userId!),
                               ),
                             );
                           } else {

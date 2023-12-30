@@ -41,34 +41,29 @@ class BottomNav extends StatelessWidget {
 
             // Navigate to the corresponding page based on the tapped index
             if (index == 0) {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => HomeScreen(userId: userId)),
               );
             } else if (index == 1) {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => EventsPage(userId: userId)),
+                MaterialPageRoute(builder: (context) => EventsPage(userId: userId)),
               );
             } else if (index == 2) {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => CafeteriasPage(userId: userId),
-                ),
+                MaterialPageRoute(builder: (context) => CafeteriasPage(userId: userId)),
               );
             } else if (index == 3) {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => SocietiesPage(userId: userId)),
               );
             } else if (index == 4) {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => ProfilePage(userId: userId),
-                ),
+                MaterialPageRoute(builder: (context) => ProfilePage(userId: userId)),
               );
             }
           }

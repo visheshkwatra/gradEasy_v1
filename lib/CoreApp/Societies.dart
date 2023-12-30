@@ -1,19 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'BottomNav.dart';
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // Replace 1 with the actual user ID
-    return MaterialApp(
-      home: SocietiesPage(userId: 1),
-    );
-  }
-}
 
 class SocietiesPage extends StatefulWidget {
   final int userId;
@@ -95,7 +84,7 @@ class _SocietiesPageState extends State<SocietiesPage> {
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
                     fontStyle: FontStyle.italic,
-                    letterSpacing: 1.5, // Adjust the letter spacing for a stylish look
+                    letterSpacing: 1.5,
                   ),
                 ),
                 Expanded(
@@ -104,16 +93,27 @@ class _SocietiesPageState extends State<SocietiesPage> {
                     itemBuilder: (context, index) {
                       Society society = societies[index];
                       return Card(
-                        elevation: 2.0,
+                        elevation: 5.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
                         margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                         child: ExpansionTile(
-                          leading: Image.network(society.thumbnailUrl),
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              society.thumbnailUrl,
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                           title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 society.name,
-                                style: TextStyle(color: Colors.black, fontSize: 18),
+                                style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                               Text(
                                 society.title,
@@ -159,7 +159,7 @@ class _SocietiesPageState extends State<SocietiesPage> {
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             primary: Color(0xFF9C71E1), // Purple color
-                                            textStyle: TextStyle(fontSize: 18),
+                                            textStyle: TextStyle(fontSize: 16),
                                             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                           ),
                                           onPressed: () {

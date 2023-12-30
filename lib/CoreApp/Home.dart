@@ -114,6 +114,47 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   }
 
   Widget _buildTimesheet(List<Timesheet> timesheets) {
+    // Get the current day of the week (1 for Monday, 2 for Tuesday, etc.)
+    int currentDay = DateTime.now().weekday;
+
+    // Filter timesheets based on the current day
+    List<Timesheet> filteredTimesheets = timesheets
+        .where((timesheet) => timesheet.day == currentDay)
+        .toList();
+
+    if (filteredTimesheets.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.event_busy, // You can replace this with a custom icon of your choice
+              color: Colors.black,
+              size: 48.0,
+            ),
+            SizedBox(height: 16.0),
+            Text(
+              'No Lectures to attend today yet.',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              'Please check again later.',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      );
+
+    }
+
     return Stack(
       children: [
         // Background Image
@@ -127,33 +168,31 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
         ),
         SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(top: 100.0, left: 16.0, right: 16.0, bottom: 16.0),
+            padding: const EdgeInsets.only(top: 68.0, left: 16.0, right: 16.0, bottom: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                // Your Timesheet Widget
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8), // Semi-transparent white background
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  padding: const EdgeInsets.all(16.0),
+                // Heading "Timesheet"
+                Center(
                   child: Text(
                     'Your Timesheet',
                     style: TextStyle(
-                      color: const Color(0xFF6670E1), // Custom text color
+                      color: Colors.black,
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
                       fontStyle: FontStyle.italic,
-                      letterSpacing: 1.5, // Adjust the letter spacing for a stylish look
+                      letterSpacing: 1.5,
                     ),
                   ),
                 ),
+                const SizedBox(height: 16.0), // Adjust spacing as needed
+                // Your Timesheet Widget
+
                 // Display your timesheet data using a ListView
                 Wrap(
                   spacing: 16.0, // Adjust the spacing between tiles
                   runSpacing: 16.0, // Adjust the run spacing between rows
-                  children: timesheets.map((timesheet) {
+                  children: filteredTimesheets.map((timesheet) {
                     return _buildTimesheetTile(timesheet);
                   }).toList(),
                 ),
@@ -166,80 +205,114 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   }
 
   Widget _buildTimesheetTile(Timesheet timesheet) {
+    double cardWidth = MediaQuery.of(context).size.width / 2 - 24;
+
     return Container(
-      width: MediaQuery.of(context).size.width / 2 - 24, // Adjust the width as needed
+      width: cardWidth,
       child: Card(
-        elevation: 4.0,
+        elevation: 8.0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: ClipPath(
-          clipper: CustomClipperShape(), // Custom clipper for curved shape
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Image from the response or default image
-                Image.network(
-                  timesheet.image.isNotEmpty ? timesheet.image : 'https://campusconnect.site/static/img/teacher.png',
-                  width: 100.0,
-                  height: 100.0,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.error); // Display an error icon if image loading fails
-                  },
-                ),
-                const SizedBox(height: 8.0),
-                Text(
-                  'Day: ${timesheet.day}',
-                  style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                ),
-                // Displaying single period
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+          clipper: CustomClipperShape(),
+          child: Container(
+            width: cardWidth,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 100.0,
+                    height: 100.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Color(0xB7B7BDFF),
+                        width: 3.0,
+                      ),
+                    ),
+                    child: ClipOval(
+                      child: Image.network(
+                        timesheet.image.isNotEmpty
+                            ? timesheet.image
+                            : 'https://campusconnect.site/static/img/teacher.png',
+                        width: 100.0,
+                        height: 100.0,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  Text(
+                    'Day: ${timesheet.day}',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18.0),
+                  ),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    'Period: ${timesheet.period}',
+                    style: TextStyle(color: Colors.black, fontSize: 16.0),
+                  ),
+                  const SizedBox(height: 4.0),
+                  Text(
+                    'From: ${timesheet.fromHour} - To: ${timesheet.toHour}',
+                    style: TextStyle(color: Colors.black, fontSize: 16.0),
+                  ),
+                  const SizedBox(height: 16.0),
+                  // Conditionally show either the status or the dropdown
+                  if (timesheet.isPresent != null) // Show status if Present or Absent is explicitly set
                     Text(
-                      'Period: ${timesheet.period}',
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                    Text(
-                      'From: ${timesheet.fromHour} - To: ${timesheet.toHour}',
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                    const SizedBox(height: 8.0),
-                    // Add a drop-down for attendance here
-                    DropdownButton<bool>(
-                      value: false, // Change this value based on attendance status
-                      onChanged: (value) {
-                        // Implement your logic here to post attendance
-                        _postAttendance(timesheet.id, value ?? false);
-                      },
-                      items: [
-                        const DropdownMenuItem<bool>(
-                          value: true,
-                          child: Text(
-                            'Present',
-                            style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                      timesheet.isPresent ? 'Status: Present' : 'Status: Absent',
+                      style: TextStyle(
+                        color: timesheet.isPresent ? Colors.green : Colors.red,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  else // Show dropdown for marking attendance if is_present is empty
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: DropdownButton<String>(
+                        value: timesheet.status.isEmpty ? null : timesheet.status,
+                        onChanged: (value) {
+                          _postAttendance(timesheet.id, value == 'Present');
+                        },
+                        items: [
+                          DropdownMenuItem<String>(
+                            value: 'Present',
+                            child: Text(
+                              'Present',
+                              style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 16.0),
+                            ),
                           ),
-                        ),
-                        const DropdownMenuItem<bool>(
-                          value: false,
-                          child: Text(
-                            'Absent',
-                            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                          DropdownMenuItem<String>(
+                            value: 'Absent',
+                            child: Text(
+                              'Absent',
+                              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 16.0),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
+
 }
 
 class CustomClipperShape extends CustomClipper<Path> {
@@ -260,7 +333,6 @@ class CustomClipperShape extends CustomClipper<Path> {
     return false; // This clipper doesn't depend on any external variables
   }
 }
-
 class Timesheet {
   final int id;
   final int user;
@@ -270,6 +342,8 @@ class Timesheet {
   final String toHour;
   final bool isClosed;
   final String image;
+  final String status;
+  final bool isPresent; // New property
 
   Timesheet({
     required this.id,
@@ -280,6 +354,8 @@ class Timesheet {
     required this.toHour,
     required this.isClosed,
     required this.image,
+    required this.status,
+    required this.isPresent, // Initialize the new property
   });
 
   factory Timesheet.fromJson(Map<String, dynamic> json) {
@@ -291,7 +367,9 @@ class Timesheet {
       fromHour: json['from_hour'],
       toHour: json['to_hour'],
       isClosed: json['is_closed'],
-      image: json['image'] ?? '', // Use an empty string if 'image' is null
+      image: json['image'] ?? '',
+      status: json['status'] ?? '',
+      isPresent: json['is_present'] ?? false, // Initialize with false if 'is_present' is null
     );
   }
 }
