@@ -50,7 +50,7 @@ dev_dependencies:
   flutter_inappwebview:
   permission_handler: ^10.4.1
   http: ^1.0.0
-  fluttertoast: ^8.2.2
+  fluttertoast:
   flutter_web_auth:
   flutter_webview_plugin:
   google_sign_in:

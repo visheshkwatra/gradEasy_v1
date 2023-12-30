@@ -87,11 +87,11 @@ class _SocietiesPageState extends State<SocietiesPage> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                SizedBox(height: 40),
+                SizedBox(height: 50),
                 Text(
                   'Societies',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
                     fontStyle: FontStyle.italic,

@@ -76,13 +76,15 @@ class _CafeteriasPageState extends State<CafeteriasPage> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                SizedBox(height: 40),
+                SizedBox(height: 50),
                 Text(
                   'Cafeterias',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
+                    color: Colors.black,
+                    fontSize: 36,
                     fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
+                    letterSpacing: 1.5,
                   ),
                 ),
                 Expanded(
@@ -170,7 +172,6 @@ class Cafeteria {
     );
   }
 }
-
 class WebViewPage extends StatelessWidget {
   final String url;
 
@@ -179,9 +180,6 @@ class WebViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('e-Order'),
-      ),
       body: WebView(
         initialUrl: url,
         javascriptMode: JavascriptMode.unrestricted,

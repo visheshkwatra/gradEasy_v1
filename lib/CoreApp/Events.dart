@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-
 import 'BottomNav.dart';
 
 
@@ -75,16 +74,18 @@ class _EventsPageState extends State<EventsPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),
             child: Column(
               children: [
-                SizedBox(height: 40),
+                SizedBox(height: 50),
                 Text(
                   'Events',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
+                    color: Colors.black,
+                    fontSize: 36,
                     fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
+                    letterSpacing: 1.5,
                   ),
                 ),
                 Expanded(
